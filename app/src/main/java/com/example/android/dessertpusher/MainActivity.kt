@@ -18,6 +18,7 @@ package com.example.android.dessertpusher
 
 import android.content.ActivityNotFoundException
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -28,6 +29,10 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LifecycleObserver
 import com.example.android.dessertpusher.databinding.ActivityMainBinding
 import timber.log.Timber
+
+const val KEY_REV = "revenue"
+const val KEY_SALES = "sales"
+const val KEY_TIME = "timer"
 
 class MainActivity : AppCompatActivity(), LifecycleObserver {
 
@@ -69,8 +74,6 @@ class MainActivity : AppCompatActivity(), LifecycleObserver {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //Get this Activity's Lifecycle
-        dessertTimer = DessertTimer(this.lifecycle)
         Timber.i("onCreate called")
         // Use Data Binding to get reference to the views
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
@@ -79,45 +82,22 @@ class MainActivity : AppCompatActivity(), LifecycleObserver {
             onDessertClicked()
         }
 
+        //Get this Activity's Lifecycle
+        dessertTimer = DessertTimer(this.lifecycle)
+
+        if(savedInstanceState != null){
+            revenue = savedInstanceState.getInt(KEY_REV, 0)
+            dessertsSold = savedInstanceState.getInt(KEY_SALES, 0)
+            dessertTimer.secondsCount = savedInstanceState.getInt(KEY_TIME, 0)
+        }
+
         // Set the TextViews to the right values
         binding.revenue = revenue
         binding.amountSold = dessertsSold
 
         // Make sure the correct dessert is showing
+        showCurrentDessert()
         binding.dessertButton.setImageResource(currentDessert.imageId)
-    }
-
-    override fun onStart() {
-        super.onStart()
-        //Log.i(TAG, "onStart")
-        //dessertTimer.startTimer()
-        Timber.i("onStart called")
-    }
-
-    override fun onResume() {
-        super.onResume()
-        Timber.i("onResume called")
-    }
-
-    override fun onPause() {
-        super.onPause()
-        Timber.i("onPause")
-    }
-
-    override fun onRestart() {
-        super.onRestart()
-        Timber.i("onRestart called")
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        Timber.i("DESTROYE \nD")
-    }
-
-    override fun onStop() {
-        super.onStop()
-        //dessertTimer.stopTimer()
-        Timber.i("It's time to STOP")
     }
 
     /**
@@ -159,6 +139,20 @@ class MainActivity : AppCompatActivity(), LifecycleObserver {
         }
     }
 
+    override fun onSaveInstanceState(outState: Bundle){ //}, outPersistentState: PersistableBundle?) {
+        super.onSaveInstanceState(outState) //, outPersistentState)
+        outState.putInt(KEY_REV, revenue)
+        outState.putInt(KEY_SALES, dessertsSold)
+        outState.putInt(KEY_TIME, dessertTimer.secondsCount)
+        Timber.i("Saved revenue")
+    }
+
+    /**override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+    super.onRestoreInstanceState(savedInstanceState)
+    revenue = savedInstanceState.getInt("key_revenue")
+    Timber.i("Retrived revenue")
+    }*/
+
     /**
      * Menu methods
      */
@@ -185,5 +179,35 @@ class MainActivity : AppCompatActivity(), LifecycleObserver {
             R.id.shareMenuButton -> onShare()
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        Timber.i("onStart called")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Timber.i("onResume called")
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Timber.i("onPause")
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        Timber.i("onRestart called")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Timber.i("Thanos: *clicks fingers*")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Timber.i("Can your app move in the frozen time?")
     }
 }
