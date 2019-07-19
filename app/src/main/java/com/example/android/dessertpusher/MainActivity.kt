@@ -62,14 +62,15 @@ class MainActivity : AppCompatActivity(), LifecycleObserver {
             Dessert(R.drawable.lollipop, 3000, 4000),
             Dessert(R.drawable.marshmallow, 4000, 8000),
             Dessert(R.drawable.nougat, 5000, 16000),
-            Dessert(R.drawable.oreo, 6000, 20000)
+            Dessert(R.drawable.oreo, 6000, 20000)//,
+            //Woolie the Liar stole my Dessert(R.drawable.pie, 9001, 1_000_000_000)
     )
     private var currentDessert = allDesserts[0]
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //dessertsSold = 0
-        dessertTimer = DessertTimer()
+        //Get this Activity's Lifecycle
+        dessertTimer = DessertTimer(this.lifecycle)
         Timber.i("onCreate called")
         // Use Data Binding to get reference to the views
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
@@ -89,7 +90,7 @@ class MainActivity : AppCompatActivity(), LifecycleObserver {
     override fun onStart() {
         super.onStart()
         //Log.i(TAG, "onStart")
-        dessertTimer.startTimer()
+        //dessertTimer.startTimer()
         Timber.i("onStart called")
     }
 
@@ -115,7 +116,7 @@ class MainActivity : AppCompatActivity(), LifecycleObserver {
 
     override fun onStop() {
         super.onStop()
-        dessertTimer.stopTimer()
+        //dessertTimer.stopTimer()
         Timber.i("It's time to STOP")
     }
 
