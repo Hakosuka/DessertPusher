@@ -144,7 +144,7 @@ class MainActivity : AppCompatActivity(), LifecycleObserver {
         outState.putInt(KEY_REV, revenue)
         outState.putInt(KEY_SALES, dessertsSold)
         outState.putInt(KEY_TIME, dessertTimer.secondsCount)
-        Timber.i("Saved revenue")
+        Timber.i("Saved instance state")
     }
 
     /**override fun onRestoreInstanceState(savedInstanceState: Bundle) {
@@ -203,7 +203,7 @@ class MainActivity : AppCompatActivity(), LifecycleObserver {
 
     override fun onDestroy() {
         super.onDestroy()
-        Timber.i("Thanos: *clicks fingers*")
+        Timber.i("Thanos: *snaps fingers*")
     }
 
     override fun onStop() {
